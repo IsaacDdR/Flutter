@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "34586908333",
+    "firebase_url": "https://latir3-2e444.firebaseio.com",
+    "project_id": "latir3-2e444",
+    "storage_bucket": "latir3-2e444.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:34586908333:android:ba7ae95b653d62c2715824",
+        "android_client_info": {
+          "package_name": "com.example.latir3"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "34586908333-jsh0mbnp0m1dkouqmikvkal0nebrp1br.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAkh_lKznDAEzOJi66TkstmWz9hjUNz5FQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "34586908333-jsh0mbnp0m1dkouqmikvkal0nebrp1br.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
