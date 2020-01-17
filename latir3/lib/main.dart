@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:cache_image/cache_image.dart';
 
 void main() => runApp(MyApp());
 
@@ -19,7 +20,6 @@ class MyHomePage extends StatefulWidget {
     return _MyHomePageState();
   }
 }
-
 
 class _MyHomePageState extends State<MyHomePage> {
   @override
@@ -63,13 +63,32 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Row(
           children: <Widget>[
             Expanded(
-              child: Image.network(record.image_db),
+              child: Image(
+                fit: BoxFit.cover,
+                image: CacheImage(record.thumbnail),
+              ),
             ),
             Column(
               children: <Widget>[
                 Padding(
                   padding: EdgeInsets.all(5.0),
-                  child: Text(record.name),
+                  child: Text(record.name, style: TextStyle(fontWeight: FontWeight.bold)),
+                ),
+                Container(
+                  width: 100,
+                  child: Padding(
+                    padding: EdgeInsets.all(5.0),
+                    child: Text(record.description),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(5.0),
+                  child: Row(
+                    children: <Widget>[
+                      Icon(Icons.star, size: 25.0),
+                      Text(record.votes.toString()),
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -82,7 +101,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
 class Record {
 
-  final String image_db;
+  final String thumbnail;
   final String description;
   final String name;
   final int votes;
@@ -92,12 +111,12 @@ class Record {
       : assert(map['name'] != null),
         assert(map['votes'] != null),
         assert(map['description'] != null),
-        assert(map['image_db'] != null),
+        assert(map['thumbnail'] != null),
 
         description = map['description'],
         name = map['name'],
         votes = map['votes'],
-        image_db = map['image_db'];
+        thumbnail = map['thumbnail'];
 
 
   Record.fromSnapshot(DocumentSnapshot snapshot)
