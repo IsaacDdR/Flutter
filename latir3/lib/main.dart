@@ -9,7 +9,73 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'App',
-      home: MyHomePage(),
+      home: MyStatefulWidget(),
+    );
+  }
+}
+
+class MyStatefulWidget extends StatefulWidget {
+  MyStatefulWidget({Key key}) : super(key: key);
+
+  @override
+  _MyStatefulWidgetState createState() => _MyStatefulWidgetState();
+}
+
+class _MyStatefulWidgetState extends State<MyStatefulWidget> {
+  int _selectedIndex = 1;
+
+  static const TextStyle optionStyle = TextStyle(fontSize: 29, fontWeight: FontWeight.bold);
+
+  List<Widget> _widgetOption = <Widget> [
+
+    MyHomePage(),
+
+    MyHomePage(),
+
+    MyHomePage(),
+
+  ];
+
+
+  void _onTapped (int index) {
+    setState((){
+      _selectedIndex = index;
+    });
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        leading: Icon(Icons.search),
+        actions: <Widget> [
+          Icon(Icons.calendar_today),
+        ],
+        title: Text("El latir"),
+      ),
+      body: Center(
+        child: _widgetOption.elementAt(_selectedIndex),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: <BottomNavigationBarItem> [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.fastfood),
+            title: Text("Restaurantes"),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.directions_bus),
+            title: Text("Tour"),
+          ),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.music_note),
+              title: Text("Antros")
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.amber[799],
+        onTap: _onTapped,
+      ),
     );
   }
 }
@@ -24,9 +90,8 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('App')),
-      body: _buildBody(context ),
+    return Container(
+      child: _buildBody(context ),
     );
   }
 
