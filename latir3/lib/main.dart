@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:cache_image/cache_image.dart';
+import 'package:flutter/services.dart';
 
 void main() => runApp(MyApp());
 
@@ -10,6 +11,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'App',
       home: MyStatefulWidget(),
+      theme: ThemeData(fontFamily: 'Raleway', primaryColor: Colors.red),
     );
   }
 }
@@ -22,20 +24,59 @@ class MyStatefulWidget extends StatefulWidget {
 }
 
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
+
   int _selectedIndex = 1;
 
-  static const TextStyle optionStyle = TextStyle(fontSize: 29, fontWeight: FontWeight.bold);
+  //static const TextStyle optionStyle = TextStyle(fontSize: 29, fontWeight: FontWeight.bold);
 
   List<Widget> _widgetOption = <Widget> [
 
-    MyHomePage(),
+    Scaffold(
+      appBar: AppBar(
+        actions: <Widget>[
+          Padding(
+            padding: EdgeInsets.all(12.0),
+            child: Icon(Icons.search),
+          ),
+        ],
+        centerTitle: true,
+        title: Text("Restaurantes"),
+        leading: Icon(Icons.menu),
+      ),
+      body: MyHomePage(),
+    ),
 
-    MyHomePage(),
+    Scaffold(
+      appBar: AppBar(
+        actions: <Widget>[
+          Padding(
+            padding: EdgeInsets.all(12.0),
+            child: Icon(Icons.search),
+          ),
+        ],
+        leading: Icon(Icons.menu),
+        centerTitle: true,
+        title: Text("Tours"),
+      ),
+      body: MyHomePage(),
+    ),
 
-    MyHomePage(),
+    Scaffold(
+      appBar: AppBar(
+        actions: <Widget>[
+          Padding(
+            padding: EdgeInsets.all(12.0),
+            child: Icon(Icons.search),
+          ),
+        ],
+        leading: Icon(Icons.menu),
+        centerTitle: true,
+        title: Text("Antros")
+      ),
+      body: MyHomePage0(),
+    ),
 
   ];
-
 
   void _onTapped (int index) {
     setState((){
@@ -47,13 +88,6 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: Icon(Icons.search),
-        actions: <Widget> [
-          Icon(Icons.calendar_today),
-        ],
-        title: Text("El latir"),
-      ),
       body: Center(
         child: _widgetOption.elementAt(_selectedIndex),
       ),
@@ -150,7 +184,97 @@ class _MyHomePageState extends State<MyHomePage> {
                   padding: EdgeInsets.all(5.0),
                   child: Row(
                     children: <Widget>[
-                      Icon(Icons.star, size: 25.0),
+                      Icon(Icons.favorite,
+                          size: 25.0,
+                          color: Colors.red,
+                      ),
+                      Text(record.votes.toString()),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class MyHomePage0 extends StatefulWidget {
+  @override
+  _MyHomePageState0 createState() {
+    return _MyHomePageState0();
+  }
+}
+
+class _MyHomePageState0 extends State<MyHomePage0> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: _buildBody(context ),
+    );
+  }
+
+
+  Widget _buildBody(BuildContext context) {
+    return StreamBuilder<QuerySnapshot>(
+      stream: Firestore.instance.collection('antros').snapshots(),
+      builder: (context, snapshot) {
+        if(!snapshot.hasData) return LinearProgressIndicator();
+
+        return _buildList(context, snapshot.data.documents);
+      },
+    );
+  }
+
+  Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
+    return ListView(
+      padding: const EdgeInsets.only(top: 20.0),
+      children: snapshot.map((data) => _buildListItem(context, data)).toList(),
+    );
+  }
+
+  Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
+    final record = Record.fromSnapshot(data);
+
+    return Padding(
+      key: ValueKey(record.name),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey),
+          borderRadius: BorderRadius.circular(5.0),
+        ),
+        child: Row(
+          children: <Widget>[
+            Expanded(
+              child: Image(
+                fit: BoxFit.cover,
+                image: CacheImage(record.thumbnail),
+              ),
+            ),
+            Column(
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.all(5.0),
+                  child: Text(record.name, style: TextStyle(fontWeight: FontWeight.bold)),
+                ),
+                Container(
+                  width: 100,
+                  child: Padding(
+                    padding: EdgeInsets.all(5.0),
+                    child: Text(record.description),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(5.0),
+                  child: Row(
+                    children: <Widget>[
+                      Icon(Icons.favorite,
+                        size: 25.0,
+                        color: Colors.red,
+                      ),
                       Text(record.votes.toString()),
                     ],
                   ),
